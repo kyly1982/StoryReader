@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <solid  android:color="@color/bg_item_unchoiced"></solid>
+    <stroke android:color="@color/divi_unchoiced" android:width="1px"></stroke>
+    <padding android:left="1px"
+             android:top="0dp"
+             android:right="0px"
+             android:bottom="1px"></padding>
+</shape>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="icon">#FFFFFF</color>
+    <color name="colorTextPrimary">#2E2E2E</color>
+    <color name="colorTextChoiced">#505050</color>
+    <color name="colorTextUnChoiced">#8C8C8C</color>
+    <color name="colorNameTextChoiced">#727272</color>
+    <color name="colorNameTextUnChoiced">#B9B9B9</color>
+
+
+    <color name="colorBtnOperation">#4BBBEF</color>
+    <color name="colorBtnOperationStroke">#48ACDB</color>
+    <color name="colorBtnOperationLength">#3990B9</color>
+
+    <color name="bg_item_unchoiced">#EAEAEA</color>
+    <color name="divi_unchoiced">#D7D7D7</color>
+</resources>

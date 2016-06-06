@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_skyblue">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/userCover"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/bg_skyblue_without_storke"
+        android:padding="1dp"
+        />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/status"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/ic_pause"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/status"
+        android:textColor="@color/colorBtnOperationLength"
+        android:layout_centerHorizontal="true"
+        android:textSize="10sp"
+        android:visibility="gone"
+        android:text="2:15"/>
+
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/status"
+        android:textColor="@color/colorBtnOperationLength"
+        />
+
+
+</RelativeLayout>

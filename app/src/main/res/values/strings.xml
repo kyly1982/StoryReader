@@ -1,0 +1,106 @@
+<resources>
+    <string name="app_name">StoryReader</string>
+    <string name="title_chapter_detail">chapter Detail</string>
+    <string name="chapterIndex">第%1s章</string>
+    <string name="chapterDescribe">章节标题</string>
+    <string name="roleName">%1s：</string>
+    <string-array name="dialogs">
+        <item>白色的月光下 五个超能力少年围着一个魔王在死斗 ——————分割线—————— 两个天才在补作业</item>
+        <item>"你们快一点，补完就回家去。"</item>
+        <item>"哦"</item>
+        <item>班主任走后</item>
+        <item> "你作业怎么没写完啊？"</item>
+        <item>"我在玩《黑暗城市》啊，你玩到第几关了？"</item>
+        <item>"我玩到了17关。"</item>
+        <item>"这么牛？我才第9关。"</item>
+        <item>"我补完了，走了。"</item>
+        <item>"喂！等等我！"</item>
+        <item>houke快步走下楼</item>
+        <item>"我就说了只剩几个字了，你怎么不说话？就因为我说话声大了点？ "</item>
+        <item>到了houke家里，houke一把吧小含踹进里面</item>
+        <item>"喂！你干什么啊？ "</item>
+        <item>"我刚刚接到了个电话 "</item>
+        <item>以下是通话内容：</item>
+        <item>"快！快来！"</item>
+        <item>"去哪里？"</item>
+        <item>"雀栖街13号！"</item>
+        <item>"去干什么？"</item>
+        <item>"你来就是了！！！"</item>
+        <item>到了那里后。门大开着，桌子被扔到了楼梯扶手上。两人看见了，嘴巴变成了o型。</item>
+        <item>"小樊？？？"</item>
+        <item>"救命！"</item>
+        <item>"小樊是谁？"</item>
+        <item>"我没有伤害你们的意思，我赐予与你们超能力！但是我的肉体被封锁了，只能用灵魂控制这个机器人来与你们交流。"</item>
+        <item>"^_^ 逗我？"</item>
+        <item>忘了介绍，小樊是一个电脑天才，所以不用上学，他和houke的关系到尾声可以看到。</item>
+        <item> "我没有开玩笑啊！"</item>
+        <item>"额.... 小樊，你这是什么破玩意，还胡说话，快把电关.........."</item>
+        <item>没等小含说完就出现了一阵刺眼的蓝光，刺晕了三人。</item>
+        <item>"哇，刚刚是什么东西？"</item>
+        <item>"这些树怎么这么高？"</item>
+        <item>这里的树都有50米~100米</item>
+        <item>"你们终于来了！"</item>
+        <item>三道蓝光到了三人身上</item>
+        <item>忽然，一道雷批了下来。</item>
+
+    </string-array>
+
+    <integer-array name="noderolesid">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>2</item>
+        <item>3</item>
+        <item>2</item>
+        <item>3</item>
+        <item>2</item>
+        <item>3</item>
+        <item>0</item>
+        <item>3</item>
+        <item>0</item>
+        <item>3</item>
+        <item>2</item>
+        <item>0</item>
+        <item>4</item>
+        <item>2</item>
+        <item>4</item>
+        <item>2</item>
+        <item>4</item>
+        <item>0</item>
+        <item>2</item>
+        <item>5</item>
+        <item>3</item>
+        <item>6</item>
+        <item>3</item>
+        <item>0</item>
+        <item>6</item>
+        <item>3</item>
+        <item>0</item>
+        <item>2</item>
+        <item>3</item>
+        <item>0</item>
+        <item>6</item>
+        <item>0</item>
+        <item>0</item>
+    </integer-array>
+
+
+    <string-array name="rolesname">
+        <item>班主任</item>
+        <item>houke</item>
+        <item>小含</item>
+        <item>？</item>
+        <item>小樊</item>
+        <item>机器人</item>
+    </string-array>
+
+    <string-array name="rolesimage">
+        <item>http://cdn.mckuai.com//images/UserHeadImg/userHeadImg/9.jpg</item>
+        <item>http://cdn.mckuai.com//images/UserHeadImg/userHeadImg/31.jpg</item>
+        <item>http://cdn.mckuai.com//images/UserHeadImg/userHeadImg/8.jpg</item>
+        <item>http://cdn.mckuai.com//images/UserHeadImg/userHeadImg/17.jpg</item>
+        <item>http://cdn.mckuai.com//images/UserHeadImg/userHeadImg/17.jpg</item>
+        <item>http://cdn.mckuai.com//images/UserHeadImg/userHeadImg/5.jpg</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+    android:background="@drawable/bg_item_unchoiced">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/portrait"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@mipmap/ic_account_circle_black"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/portrait"
+        android:gravity="center_vertical"
+        android:textColor="@color/colorNameTextUnChoiced"
+        android:text="人物名称"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/portrait"
+        android:textColor="@color/colorTextUnChoiced"
+        android:text="我活着就是为了复仇，向人类复仇！我活着就是为了复仇，向人类复仇！"/>
+
+
+
+</RelativeLayout>
