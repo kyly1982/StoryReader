@@ -4,6 +4,10 @@
     <string name="chapterIndex">第%1s章</string>
     <string name="chapterDescribe">章节标题</string>
     <string name="roleName">%1s：</string>
+    <string name="writerIcon">http://cdn.mckuai.com//images/UserHeadImg/userHeadImg/40.jpg</string>
+    <string name="writerName">houke</string>
+    <string name="storeName">超能大冒险</string>
+
     <string-array name="dialogs">
         <item>白色的月光下 五个超能力少年围着一个魔王在死斗 ——————分割线—————— 两个天才在补作业</item>
         <item>"你们快一点，补完就回家去。"</item>
@@ -49,7 +53,9 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+        <item>0</item>
         <item>2</item>
+
         <item>3</item>
         <item>2</item>
         <item>3</item>

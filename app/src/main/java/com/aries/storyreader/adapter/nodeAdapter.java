@@ -23,7 +23,7 @@ public class nodeAdapter extends RecyclerView.Adapter<nodeAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Node> nodeItems;
     private OnItemClickListener listener;
-    private int choiseNodeIndex = -1;
+    private int choiseNodeIndex = 0;
 
     private ImageLoader loader;
     private DisplayImageOptions options;
@@ -75,20 +75,21 @@ public class nodeAdapter extends RecyclerView.Adapter<nodeAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if (null != nodeItems && !nodeItems.isEmpty()) {
             final Node item = nodeItems.get(position);
-            if (null != item.getRole()) {
+            if (null != item.getRole() || (null != item.getRole() && item.getRole().getId() > 0)) {
                 if (null == loader){
                     loader = ImageLoader.getInstance();
                     options = MyApplication.instence.getCircleOptions();
                 }
-                holder.name.setText(item.getRole().getName() + ",index=" + position);
+                holder.name.setText(item.getRole().getName());
                 if (null != item.getRole().getPortrait()){
                     loader.displayImage(item.getRole().getPortrait(),holder.portrait,options);
+                    holder.portrait.setTag(item.getRole().getPortrait());
                 }
                 holder.portrait.setVisibility(View.VISIBLE);
                 holder.name.setVisibility(View.VISIBLE);
             } else {
                 holder.name.setVisibility(View.GONE);
-                holder.portrait.setVisibility(View.INVISIBLE);
+                holder.portrait.setVisibility(View.GONE);
             }
             holder.content.setText(item.getContent());
 

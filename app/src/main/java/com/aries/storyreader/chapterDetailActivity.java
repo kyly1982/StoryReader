@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +18,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 
 import com.aries.storyreader.adapter.nodeAdapter;
 import com.aries.storyreader.bean.ChapterItem;
@@ -43,7 +39,7 @@ import java.util.ArrayList;
 public class chapterDetailActivity extends AppCompatActivity implements com.aries.storyreader.adapter.nodeAdapter.OnItemClickListener {
     private Toolbar toolbar;
     private RecyclerView nodeListView;
-    private OperationButton operation;
+//    private OperationButton operation;
 
     private ChapterItem chapterItem;
     private ArrayList<Node> nodeItems;
@@ -102,14 +98,14 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
     private void initView(){
         toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         nodeListView = (RecyclerView) findViewById(R.id.nodelist);
-        operation = (OperationButton) findViewById(R.id.operation);
+//        operation = (OperationButton) findViewById(R.id.operation);
 
         manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         nodeListView.setLayoutManager(manager);
 
 
         setSupportActionBar(toolbar);
-        toolbar.setTitle(chapterItem.getDescribe());
+        toolbar.setTitle("");
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -117,15 +113,15 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        operation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+    /*    operation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 height = operation.getHeight();
                 operation.getViewTreeObserver().removeGlobalOnLayoutListener(this);
             }
-        });
+        });*/
 
-        nodeListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        /*nodeListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -148,7 +144,7 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
                 super.onScrollStateChanged(recyclerView, newState);
 
             }
-        });
+        });*/
     }
 
     @Override
@@ -329,18 +325,18 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
     }
 
     private void scrollToPosition(int dy){
-        Log.e("scrollToPosition","dy="+dy + "\toperationTop="+operation.getTop()+"\theight="+height);
+        //Log.e("scrollToPosition","dy="+dy + "\toperationTop="+operation.getTop()+"\theight="+height);
         //operation.startAnimation(getScrollAnimation(dy));
 //        operation.scrollBy(operation.getLeft(),operation.getTop() - dy);
        // operation.setLayoutParams(getOperationLayoutParams(dy,true));
         View view = manager.findViewByPosition(position);
         int top = view.getTop();
-        operation.setTop(top);
-        operation.setBottom(operation.getTop() + height);
+//        operation.setTop(top);
+//        operation.setBottom(operation.getTop() + height);
         //operation.postInvalidate();
     }
 
-    private CoordinatorLayout.LayoutParams getOperationLayoutParams(int dy,boolean isScroll){
+   /* private CoordinatorLayout.LayoutParams getOperationLayoutParams(int dy,boolean isScroll){
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) operation.getLayoutParams();
         if (isScroll) {
             Log.e("scroll", "beforTop=" + operation.getTop() + "\ttopMargin=" + params.topMargin + "\tdy=" + dy);
@@ -352,10 +348,10 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
             operation.setY(0);
         }
         return params;
-    }
+    }*/
 
 
-    private Animation getScrollOperationButtonAnimation(int top){
+    /*private Animation getScrollOperationButtonAnimation(int top){
         Animation animation = new TranslateAnimation(0,0,-operation.getTop(),-top);
         animation.setFillAfter(true);
         animation.setDuration(20);
@@ -367,7 +363,7 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
         animation.setFillAfter(true);
         animation.setDuration(20);
         return animation;
-    }
+    }*/
 
     private Handler handler = new Handler(){
         @Override

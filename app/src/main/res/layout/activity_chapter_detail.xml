@@ -23,13 +23,47 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
+
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/detail_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:title="章节"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                </android.support.v7.widget.Toolbar>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/writerPortrait"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/ic_account_circle_black"
+                    />
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/writerPortrait"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="18sp"
+                    android:text="@string/writerName"/>
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_above="@id/writerPortrait"
+                    android:textSize="22sp"
+                    android:textColor="@color/bg_item_unchoiced"
+                    android:text="@string/storeName"
+                    />
+
+            </RelativeLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -47,12 +81,13 @@
 
     <com.aries.storyreader.OperationButton
         android:id="@+id/operation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:fitsSystemWindows="true"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="12dp"
         app:borderWidth="0dp"
         android:layout_gravity="center_vertical|right"
+        android:background="@drawable/bg_skyblue"
         android:src="@mipmap/ic_mic_none_white"/>
 
 

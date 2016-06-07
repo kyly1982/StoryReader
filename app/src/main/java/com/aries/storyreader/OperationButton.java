@@ -1,14 +1,17 @@
 package com.aries.storyreader;
 
 import android.content.Context;
-import android.os.SystemClock;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Chronometer;
 import android.widget.RelativeLayout;
 
 import com.aries.storyreader.bean.Dub;
@@ -18,14 +21,14 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 /**
  * Created by kyly on 2016/6/3.
  */
-public class OperationButton extends RelativeLayout implements View.OnClickListener,Chronometer.OnChronometerTickListener {
+public class OperationButton extends RelativeLayout implements View.OnClickListener {
     private Context context;
     private AppCompatImageView statusView;
     private AppCompatImageView coverView;
-    private Chronometer timeView;
+    private AppCompatTextView timeView;
     private ImageLoader loader;
     private DisplayImageOptions options;
-    private long lastPauseTime = 0;
+    private int elapsedTime = 0;
 
 
     private Dub dub;
@@ -76,6 +79,7 @@ public class OperationButton extends RelativeLayout implements View.OnClickListe
         } else {
             states = OperationStates.RECODERREADY;
         }
+        elapsedTime = dub.getTime();
         showData();
     }
 
@@ -86,7 +90,6 @@ public class OperationButton extends RelativeLayout implements View.OnClickListe
 
     private void initView() {
         removeAllViews();
-        setBackgroundResource(R.drawable.bg_skyblue);
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -97,6 +100,7 @@ public class OperationButton extends RelativeLayout implements View.OnClickListe
                 addTimerView();
             }
         });
+
     }
 
     private void addUserCvoerView() {
@@ -104,7 +108,7 @@ public class OperationButton extends RelativeLayout implements View.OnClickListe
         RelativeLayout.LayoutParams params = new LayoutParams((int)(width * 0.4), (int)(height * 0.4));
         params.addRule(ALIGN_PARENT_RIGHT);
         coverView.setLayoutParams(params);
-        coverView.setPadding(4,4,4,4);
+        coverView.setPadding(2,2,2,2);
         coverView.setBackgroundResource(R.drawable.bg_skyblue_without_storke);
         coverView.setImageResource(R.mipmap.ic_account_circle_black);
         addView(coverView);
@@ -112,7 +116,8 @@ public class OperationButton extends RelativeLayout implements View.OnClickListe
 
     private void addStatesImageView() {
         statusView = new AppCompatImageView(context);
-        RelativeLayout.LayoutParams params = new LayoutParams(80, 80);
+        statusView.setId(R.id.statusViewId);
+        RelativeLayout.LayoutParams params = new LayoutParams((int)(width * 0.4), (int)(width * 0.4));
         params.addRule(CENTER_IN_PARENT);
         statusView.setLayoutParams(params);
         statusView.setBackgroundResource(R.drawable.bg_skyblue);
@@ -121,16 +126,22 @@ public class OperationButton extends RelativeLayout implements View.OnClickListe
     }
 
     private void addTimerView() {
-        timeView = new Chronometer(context);
+        timeView = new AppCompatTextView(context);
         RelativeLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(BELOW,statusView.getId());
+        params.addRule(ALIGN_PARENT_BOTTOM);
         params.addRule(CENTER_HORIZONTAL);
+
+
         timeView.setLayoutParams(params);
-        timeView.setTextColor(context.getResources().getColor(R.color.colorBtnOperationLength));
-        timeView.setFormat("MM:SS");
+        if (Build.VERSION.SDK_INT == 23){
+            timeView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.operationTimeTextSize));
+        } else {
+            timeView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getResources().getDimension(R.dimen.operationTimeTextSize));
+        }
+        timeView.setPadding(0,0,0,10);
+        timeView.setTextColor(getResources().getColor(R.color.colorBtnOperationLength));
         timeView.setText("00:00");
-        timeView.setOnChronometerTickListener(this);
-        addView(statusView);
+        addView(timeView);
     }
 
     private void showData(){
@@ -140,13 +151,15 @@ public class OperationButton extends RelativeLayout implements View.OnClickListe
         }
 
         if ( null != dub.getOwner()  && null != dub.getOwner().getPortrait()){
-            if (null == coverView.getTag() || (null != coverView.getTag() && !coverView.getTag().equals(dub.getOwner().getPortrait()))) {
+            if (null == coverView.getTag() || !(coverView.getTag().equals(dub.getOwner().getPortrait()))) {
                 loader.displayImage(dub.getOwner().getPortrait(), coverView, options);
                 coverView.setTag(dub.getOwner().getPortrait());
             }
         } else {
             coverView.setImageResource(R.mipmap.ic_account_circle_black);
         }
+
+        timeView.setText(getTime());
     }
 
     private void pause(){
@@ -155,6 +168,14 @@ public class OperationButton extends RelativeLayout implements View.OnClickListe
 
     private void resumer(){
 
+    }
+
+    private String getTime(){
+        if (elapsedTime > 59){
+            return (elapsedTime / 60) + ":" + (elapsedTime % 60);
+        } else {
+            return "00:" + elapsedTime;
+        }
     }
 
     public enum OperationStates {
@@ -173,14 +194,14 @@ public class OperationButton extends RelativeLayout implements View.OnClickListe
                 case RECODERREADY:
                     states = OperationStates.RECODERING;
                     statusView.setBackgroundResource(R.mipmap.ic_stop_white);
-                    timeView.setBase(SystemClock.elapsedRealtime());
-                    timeView.start();
+                    //timeView.setBase(SystemClock.elapsedRealtime());
+                    //timeView.start();
                     listener.startRecording();
                     break;
                 case RECODERING:
                     states = OperationStates.PLAYREADY;
                     statusView.setBackgroundResource(R.mipmap.ic_play);
-                    timeView.stop();
+                    //timeView.stop();
                     listener.stopRecording();
                     break;
                 case PLAYREADY:
@@ -202,8 +223,30 @@ public class OperationButton extends RelativeLayout implements View.OnClickListe
         }
     }
 
-    @Override
-    public void onChronometerTick(Chronometer chronometer) {
 
-    }
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 99241:
+                    if (states == OperationStates.RECODERING){
+                        elapsedTime++;
+                        handler.sendMessageDelayed(handler.obtainMessage(99241),1000);
+                    } else if (states == OperationStates.PLAYING){
+                        if (0 == elapsedTime){
+                            handler.removeMessages(99241);
+                        } else {
+                            elapsedTime--;
+                            handler.sendMessageDelayed(handler.obtainMessage(99241),1000);
+                        }
+                    }
+                    showData();
+                    break;
+                case 99240:
+                    handler.removeMessages(99241);
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 }
