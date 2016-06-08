@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,13 +39,13 @@ public class nodeAdapter extends RecyclerView.Adapter<nodeAdapter.ViewHolder> {
     }
 
     public void setChoiseNodeId(long id) {
-        setChoiseNodeIndex(getPositionById(id));
-
+        setChoiseNodePosition(getPositionById(id));
     }
 
-    public void setChoiseNodeIndex(int index){
-        if (index != choiseNodeIndex){
+    public void setChoiseNodePosition(int position){
+        if (position != choiseNodeIndex){
             int lastIndex = choiseNodeIndex;
+            choiseNodeIndex = position;
             notifyItemChanged(lastIndex);
             if (-1 < choiseNodeIndex) {
                 notifyItemChanged(choiseNodeIndex);
@@ -97,12 +98,14 @@ public class nodeAdapter extends RecyclerView.Adapter<nodeAdapter.ViewHolder> {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        setChoiseNodePosition(position);
                         listener.onItemClicked(position,item);
                     }
                 });
             }
 
             if (position == choiseNodeIndex){
+                Log.e("NADP","position="+position);
                 holder.name.setTextColor(context.getResources().getColor(R.color.colorNameTextChoiced));
                 holder.content.setTextColor(context.getResources().getColor(R.color.colorTextChoiced));
                 holder.itemView.setBackgroundResource(R.drawable.bg_item_choiced);

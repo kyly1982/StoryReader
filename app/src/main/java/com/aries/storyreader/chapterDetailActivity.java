@@ -17,12 +17,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.aries.storyreader.adapter.nodeAdapter;
 import com.aries.storyreader.bean.ChapterItem;
+import com.aries.storyreader.bean.Dub;
 import com.aries.storyreader.bean.Node;
+import com.aries.storyreader.bean.User;
 import com.czt.mp3recorder.MP3Recorder;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,10 +42,14 @@ import java.util.ArrayList;
  * item details are presented side-by-side with a list of items
  * in a {@link chapterListActivity}.
  */
-public class chapterDetailActivity extends AppCompatActivity implements com.aries.storyreader.adapter.nodeAdapter.OnItemClickListener {
+public class chapterDetailActivity extends AppCompatActivity implements com.aries.storyreader.adapter.nodeAdapter.OnItemClickListener,OperationButton.OnStatusChangedListener {
     private Toolbar toolbar;
     private RecyclerView nodeListView;
-//    private OperationButton operation;
+    private OperationButton operation;
+    private ImageView writerPortrait;
+    private RelativeLayout header;
+    private ImageView cover;
+    private LinearLayout dubOwnerRoot;
 
     private ChapterItem chapterItem;
     private ArrayList<Node> nodeItems;
@@ -48,15 +58,16 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
     private MediaPlayer player;
     private File file;
     private LinearLayoutManager manager;
+    private ImageLoader loader;
+    private DisplayImageOptions circleOption;
 
-    private int mFirst = 0;
-    private int mLast = 0;
+    private ArrayList<User> dubOwner;
+
     private int position=0;
-    private int height = 0;
+    private Node currentItem;
+    private boolean isInited = false;
+    private boolean isChanged = false;
 
-    private Node playItem;
-
-//    private int permissionRequestCode = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,61 +102,11 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_detail,menu);
+        //getMenuInflater().inflate(R.menu.menu_detail,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void initView(){
-        toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        nodeListView = (RecyclerView) findViewById(R.id.nodelist);
-//        operation = (OperationButton) findViewById(R.id.operation);
 
-        manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        nodeListView.setLayoutManager(manager);
-
-
-        setSupportActionBar(toolbar);
-        toolbar.setTitle("");
-
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-    /*    operation.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                height = operation.getHeight();
-                operation.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            }
-        });*/
-
-        /*nodeListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int first = manager.findFirstVisibleItemPosition();
-                int end = manager.findLastVisibleItemPosition();
-                if (first != mFirst || end != mLast) {
-                    mFirst = first;
-                    mLast = end;
-                    nodeAdapter.setChoiseNodeIndex(((mFirst + mLast) / 2));
-                    position = ((mFirst + mLast) / 2);
-                    //moveToPosition(((mFirst + mLast) / 2));
-                }
-                scrollToPosition(dy);
-
-
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-            }
-        });*/
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -156,7 +117,7 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
                 return true;
             case R.id.action_play:
                 if (null != nodeItems){
-                    playItem = nodeItems.get(0);
+                    currentItem = nodeItems.get(0);
                     playItem(true);
                 }
                 break;
@@ -170,8 +131,71 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
         return super.onOptionsItemSelected(item);
     }
 
+    private void initView(){
+        toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        nodeListView = (RecyclerView) findViewById(R.id.nodelist);
+        operation = (OperationButton) findViewById(R.id.operation);
+        header = (RelativeLayout) findViewById(R.id.header);
+        cover = (ImageView) findViewById(R.id.cover);
+        writerPortrait= (ImageView) findViewById(R.id.writerPortrait);
+        dubOwnerRoot = (LinearLayout) findViewById(R.id.dubOwner);
+
+        manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        nodeListView.setLayoutManager(manager);
+
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(0);
+        toolbar.setTitle("");
+
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        operation.setOnStatusChangedListener(this);
+
+
+        nodeListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (isInited){
+                    int first = manager.findFirstVisibleItemPosition();
+                    int last = manager.findLastVisibleItemPosition();
+
+
+
+                    int index = (manager.findFirstVisibleItemPosition() + manager.findLastVisibleItemPosition()) / 2;
+                    if (position != index) {
+                        position = index;
+                        isChanged = true;
+                        Log.e("scroll","current position="+position);
+                        nodeAdapter.setChoiseNodePosition(position);
+                        currentItem = nodeItems.get(position);
+                        operation.setDub(currentItem.getDub());
+                    }
+                }
+
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (0 == newState){
+                    if (isChanged) {
+                        playItem(false);
+                        isChanged = false;
+                    }
+                }
+            }
+        });
+    }
+
     private void getData(){
         nodeItems = Dategen.getNodeItems(this);
+        dubOwner = Dategen.getDubOwner(this);
         read();
         showdata();
     }
@@ -179,53 +203,21 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
     private void showdata(){
         if (null == nodeAdapter){
             nodeAdapter = new nodeAdapter(this,this);
+            loader = ImageLoader.getInstance();
+            circleOption = MyApplication.instence.getCircleOptions();
         }
         nodeAdapter.setData(nodeItems);
         nodeListView.setAdapter(nodeAdapter);
-        int first = manager.findFirstVisibleItemPosition();
-        int end = manager.findLastVisibleItemPosition();
-        nodeAdapter.setChoiseNodeIndex(((first + end) / 2));
+        loader.displayImage("http://p2.qhimg.com/t01870443f968f1e4bf.png",cover);
+        loader.displayImage(getString(R.string.writerIcon),writerPortrait,circleOption);
+        isInited = true;
     }
-
-    /*@Override
-    public void onItemPlayClicked(NodeItem item) {
-        if (null != item && null != item.getDub()) {
-            playItem = item;
-            playItem(false);
-        }
-    }
-
-    @Override
-    public void onItemRecordClicked(NodeItem item) {
-        if (null == recorder) {
-            recorder = new MP3Recorder(getFile());
-            try {
-                nodeAdapter.setChoiseNodeIndex(item.getIndex());
-                recorder.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            recorder.stop();
-            nodeAdapter.setChoiseNodeIndex(-1);
-            for (NodeItem nodeItem:nodeItems){
-                if (nodeItem.getIndex() == item.getIndex()){
-                    nodeItem.setDub(file.getAbsolutePath());
-                    nodeAdapter.setData(nodeItems);
-                    break;
-                }
-            }
-            recorder = null;
-        }
-    }*/
 
     @Override
     public void onItemClicked(int position,Node item) {
-        Log.e("onItemClicked","posotion="+position +"\tmFirst="+mFirst+"\tmLast="+mLast);
-        if (0 == mFirst || nodeItems.size() - 1 == mLast){
-            nodeAdapter.setChoiseNodeIndex(position);
-            Log.e("onItemClicked","边界设置");
-        }
+        this.position = position;
+        currentItem = item;
+        operation.setDub(currentItem.getDub());
     }
 
     private File getFile(){
@@ -240,57 +232,35 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
     }
 
     private void playItem(final boolean playToEnd){
-        if (null != playItem && null != playItem.getDub()){
+        if (null != currentItem && null != currentItem.getDub()){
             if (null == player){
                 player = new MediaPlayer();
-                /*if (playToEnd){
-                    player.setLooping(false);
-                }*/
                 player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         player.setVolume(0f,0f);
                         stopPlay();
-                        if (playToEnd){
-                            boolean hasNext = false;
-                            for (Node nodeItem:nodeItems){
-                                if (playItem.getId() < nodeItem.getId() && null != nodeItem.getDub()){
-                                    playItem = nodeItem;
-                                    hasNext = true;
-                                    break;
-                                }
-                            }
-                            if (!hasNext){
-                                nodeAdapter.setChoiseNodeIndex(-1);
-                                return;
-                            } else {
-                                handler.sendMessageDelayed(handler.obtainMessage(1),800);
-                            }
-                        } else {
-                            nodeAdapter.setChoiseNodeIndex(-1);
-                        }
+                        operation.setPlayComplet();
                     }
                 });
             } else {
                 player.reset();
             }
             try {
-                player.setDataSource(playItem.getDub().getFile());
+                player.setDataSource(currentItem.getDub().getFile());
                 player.prepare();
             } catch (IOException e) {
+                stopPlay();
+                operation.setPlayComplet();
                 e.printStackTrace();
             }
-            nodeAdapter.setChoiseNodeId(playItem.getId());
             player.start();
             player.setVolume(1f,1f);
         }
     }
 
-    private void stopPlay(){
-        if (null != player && player.isPlaying()){
-            player.stop();
-        }
-    }
+
+
 
     private void read(){
         SharedPreferences preferences = getSharedPreferences("data", Activity.MODE_PRIVATE);
@@ -316,54 +286,35 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
         editor.commit();
     }
 
-    private void moveToPosition(int position){
-        View view = manager.findViewByPosition(position);
-        int top = view.getTop();
-        //operation.setLayoutParams(getOperationLayoutParams(top,false));
-       // operation.setTop(top);
-        //operation.postInvalidate();
-    }
-
-    private void scrollToPosition(int dy){
-        //Log.e("scrollToPosition","dy="+dy + "\toperationTop="+operation.getTop()+"\theight="+height);
-        //operation.startAnimation(getScrollAnimation(dy));
-//        operation.scrollBy(operation.getLeft(),operation.getTop() - dy);
-       // operation.setLayoutParams(getOperationLayoutParams(dy,true));
-        View view = manager.findViewByPosition(position);
-        int top = view.getTop();
-//        operation.setTop(top);
-//        operation.setBottom(operation.getTop() + height);
-        //operation.postInvalidate();
-    }
-
-   /* private CoordinatorLayout.LayoutParams getOperationLayoutParams(int dy,boolean isScroll){
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) operation.getLayoutParams();
-        if (isScroll) {
-            Log.e("scroll", "beforTop=" + operation.getTop() + "\ttopMargin=" + params.topMargin + "\tdy=" + dy);
-            params.topMargin = params.topMargin == 0 ? operation.getTop() + dy : params.topMargin - dy;
-        } else {
-            Log.e("change", "beforTop=" + operation.getTop() + "\ttopMargin=" + params.topMargin + "\tdy=" + dy);
-            params.topMargin = dy;
-            operation.setTop(0);
-            operation.setY(0);
+    private void addDubUser(User user){
+        String tag = (String) dubOwnerRoot.getTag();
+        //检查用户是否已存在
+        if (null != tag){
+            String[] ids = tag.split(",");
+            for (int i = 0;i < ids.length;i++){
+                if (ids[i].equals(user.getId()+"")){
+                    return;
+                }
+            }
         }
-        return params;
-    }*/
+        //添加用户
+        ImageView imageView = new ImageView(this);
+        int width = getResources().getDimensionPixelSize(R.dimen.dubOwnerCoverWidth);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width,width);
+        params.setMargins(0,5,50,5);
+        imageView.setImageResource(R.mipmap.ic_account_circle_black);
+        dubOwnerRoot.addView(imageView,params);
+        loader.displayImage(user.getPortrait(),imageView,circleOption);
+        dubOwnerRoot.postInvalidate();
 
-
-    /*private Animation getScrollOperationButtonAnimation(int top){
-        Animation animation = new TranslateAnimation(0,0,-operation.getTop(),-top);
-        animation.setFillAfter(true);
-        animation.setDuration(20);
-        return animation;
+        if (null == tag){
+            tag = user.getId()+"";
+        } else {
+            tag +=","+user.getId();
+        }
+        dubOwnerRoot.setTag(tag);
     }
 
-    private Animation getScrollAnimation(int top){
-        Animation animation = new TranslateAnimation(0,0,-operation.getTop(),top);
-        animation.setFillAfter(true);
-        animation.setDuration(20);
-        return animation;
-    }*/
 
     private Handler handler = new Handler(){
         @Override
@@ -379,4 +330,65 @@ public class chapterDetailActivity extends AppCompatActivity implements com.arie
             }
         }
     };
+
+    /**
+     * Operation按钮的相关回调
+     */
+    @Override
+    public void startPlay() {
+        switch (operation.getStatus()){
+            case PAUSE:
+                if (null != player ){
+                    player.start();
+                }
+                break;
+            case PLAYREADY:
+                playItem(false);
+                break;
+        }
+    }
+
+    @Override
+    public void pausePlay() {
+        if (null != player && player.isPlaying()){
+            player.pause();
+        }
+    }
+
+    @Override
+    public void stopPlay(){
+        if (null != player && player.isPlaying()){
+            player.stop();
+        }
+    }
+
+    @Override
+    public void startRecording() {
+        if (null == recorder) {
+            recorder = new MP3Recorder(getFile());
+            try {
+                recorder.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+        }
+    }
+
+    @Override
+    public void stopRecording() {
+        recorder.stop();
+        Dub dub = new Dub(currentItem.getId(),operation.getTime(),file.getAbsolutePath());
+        User duber = dubOwner.get((int)(Math.random() * 5));
+        dub.setOwner(duber);
+        addDubUser(duber);
+        nodeItems.get(position).setDub(dub);
+        operation.setDub(dub);
+        nodeAdapter.setData(nodeItems);
+
+        recorder = null;
+    }
+
+
 }

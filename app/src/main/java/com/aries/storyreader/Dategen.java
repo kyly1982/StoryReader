@@ -31,6 +31,17 @@ public class Dategen {
         return nodeItems;
     }
 
+    public static ArrayList<User> getDubOwner(Context context){
+        ArrayList<User> dubs = new ArrayList<>(5);
+        String[] names = context.getResources().getStringArray(R.array.dubOwnerName);
+        String[] images = context.getResources().getStringArray(R.array.dubOwnerimage);
+        for (int i = 0;i < names.length;i++){
+            User user = new User((long)i,names[i],images[i]);
+            dubs.add(user);
+        }
+        return dubs;
+    }
+
     private static void loadRoles(){
         if (null == roles){
             roles = new ArrayList<>(6);

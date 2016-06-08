@@ -25,20 +25,27 @@
 
 
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/detail_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-                </android.support.v7.widget.Toolbar>
 
             <RelativeLayout
+                android:id="@+id/header"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true">
 
-                <android.support.v7.widget.AppCompatImageView
+                <ImageView
+                    android:id="@+id/cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:background="@null"
+                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorLayout"/>
+
+                <ImageView
                     android:id="@+id/writerPortrait"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
@@ -51,6 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/writerPortrait"
                     android:layout_centerHorizontal="true"
+                    android:textColor="@color/colorNameTextChoiced"
                     android:textSize="18sp"
                     android:text="@string/writerName"/>
                 <android.support.v7.widget.AppCompatTextView
@@ -63,7 +71,40 @@
                     android:text="@string/storeName"
                     />
 
+                <LinearLayout
+                    android:id="@+id/dubOwner"
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="声优"
+                    android:textColor="@color/colorNameTextChoiced"
+                    android:layout_marginLeft="16dp"
+                    android:layout_above="@id/dubOwner"
+                    />
+
             </RelativeLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/detail_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+
+            </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

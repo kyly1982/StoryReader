@@ -112,6 +112,7 @@ public class chapterListActivity extends AppCompatActivity implements chapterAda
         chapterListView = (RecyclerView) findViewById(R.id.chapter_list);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(0);
         toolbar.setTitle(getTitle());
         toolbar.setTitle("章节");
 

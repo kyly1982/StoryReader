@@ -109,4 +109,23 @@
         <item>http://cdn.mckuai.com//images/UserHeadImg/userHeadImg/5.jpg</item>
     </string-array>
 
+    <string-array name="dubOwnerName">
+        <item>零之启</item>
+        <item>星天L</item>
+        <item>Master Sparklets</item>
+        <item>宇泽i</item>
+        <item>筱可耐</item>
+    </string-array>
+
+
+    <string-array name="dubOwnerimage">
+        <item>http://cdn.mckuai.com//UserHeadImage/2015_07/14365841411801436584137701237.jpg</item>
+        <item>http://cdn.mckuai.com/uploads/headimg/20160603/ac858aae-a517-49d3-8784-8da718686033.jpg</item>
+        <item>http://cdn.mckuai.com/uploads/headimg/20160416/5be7bccb-ed10-4bf0-bec4-197c9beef181.jpg</item>
+        <item>http://cdn.mckuai.com/uploads/headimg/20151212/9eeb5d21-035a-4d11-a63d-ca29925cc67d.png</item>
+        <item>http://cdn.mckuai.com//UserHeadImage/2015_05/143253348468514325334754031660.jpg</item>
+    </string-array>
+
+
+
 </resources>

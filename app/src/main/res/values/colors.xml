@@ -7,7 +7,8 @@
     <color name="colorTextPrimary">#2E2E2E</color>
     <color name="colorTextChoiced">#505050</color>
     <color name="colorTextUnChoiced">#8C8C8C</color>
-    <color name="colorNameTextChoiced">#727272</color>
+    <color name="colorNameTextChoiced">#90FFFFFF</color>
+    <color name="colorLayout">#90000000</color>
     <color name="colorNameTextUnChoiced">#B9B9B9</color>
 
 
